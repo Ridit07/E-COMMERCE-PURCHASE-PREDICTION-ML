@@ -1,0 +1,116 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.preprocessing import LabelEncoder
+
+
+# URL of the data set
+url = "https://archive.ics.uci.edu/ml/machine-learning-databases/00468/online_shoppers_intention.csv"
+
+# Read the CSV file into a pandas DataFrame
+df = pd.read_csv(url)
+
+df["Revenue"] = df["Revenue"].astype(int)
+df["Weekend"] = df["Weekend"].astype(int)
+
+le = LabelEncoder()
+label = le.fit_transform(df['VisitorType'])
+df['VisitorType'] = df['VisitorType'].replace(['Other'],'Returning_Visitor')
+le = LabelEncoder()
+label = le.fit_transform(df['VisitorType'])
+df.drop("VisitorType", axis=1, inplace=True)
+ 
+# Appending the array to our dataFrame
+# with column name 'Purchased'
+df["VisitorType"] = label
+df.drop("Month", axis=1, inplace=True)
+X = df.drop('Revenue', axis=1)
+y = df['Revenue']
+
+import pandas as pd
+import numpy as np
+from sklearn.ensemble import ExtraTreesClassifier
+import matplotlib.pyplot as plt
+model = ExtraTreesClassifier()
+model.fit(X,y)
+print(model.feature_importances_) #use inbuilt class feature_importances of tree based classifiers
+#plot graph of feature importances for better visualization
+feat_importances = pd.Series(model.feature_importances_, index=X.columns)
+feat_importances.nlargest(10).plot(kind='barh')
+plt.show()
+top4 = feat_importances.nlargest(4).index
+X = X.drop(['Administrative','Administrative_Duration','Informational','Informational_Duration','BounceRates','SpecialDay','OperatingSystems','Browser','Region','TrafficType','VisitorType','Weekend'], axis=1)
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.naive_bayes import GaussianNB
+
+
+# split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# train logistic regression model
+lr = LogisticRegression()
+lr.fit(X_train, y_train)
+lr_pred = lr.predict(X_test)
+lr_accuracy = accuracy_score(y_test, lr_pred)
+
+# train decision tree model
+dt = DecisionTreeClassifier()
+dt.fit(X_train, y_train)
+dt_pred = dt.predict(X_test)
+dt_accuracy = accuracy_score(y_test, dt_pred)
+
+# train random forest model
+rf = RandomForestClassifier()
+rf.fit(X_train, y_train)
+rf_pred = rf.predict(X_test)
+rf_accuracy = accuracy_score(y_test, rf_pred)
+
+#K-Nearest Neighbors (KNN) Classifier
+knn = KNeighborsClassifier(n_neighbors=3)
+knn.fit(X_train, y_train)
+knn_pred = knn.predict(X_test)
+knn_accuracy = accuracy_score(y_test, knn_pred)
+
+#Naive Bayes Classifier
+gnb = GaussianNB()
+gnb.fit(X_train, y_train)
+gnb_pred = gnb.predict(X_test)
+gnb_accuracy = accuracy_score(y_test, gnb_pred)
+
+
+from sklearn.model_selection import GridSearchCV
+
+
+param_grid = {
+'n_estimators': [50, 100, 200],
+'max_depth': [5, 10, 20, 30],
+'min_samples_split': [2, 5, 10],
+'min_samples_leaf': [1, 2, 4]
+}
+
+from joblib import parallel_backend
+
+with parallel_backend('threading', n_jobs=10):
+
+    rf = RandomForestClassifier()
+    rf_tuned = GridSearchCV(rf, param_grid, cv=5)
+    rf_tuned.fit(X_train, y_train)
+    best_params = rf_tuned.best_params_
+    print(f"Best Parameters: {best_params}")
+
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+
+
+rf_tuned = RandomForestClassifier(**best_params)
+rf_tuned.fit(X_train, y_train)
+y_pred = rf_tuned.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+print(f"Tuned Random Forest:")
+print(f"Accuracy: {accuracy}")
+print(f"Confusion Matrix: {confusion_matrix(y_test, y_pred)}")
+print(f"Classification Report: {classification_report(y_test, y_pred)}")
