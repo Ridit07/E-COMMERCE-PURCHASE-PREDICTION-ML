@@ -2,7 +2,7 @@ import streamlit as st
 import numpy as np
 import pickle
 
-model = pickle.load(open('project.pkl', 'rb'))
+model = pickle.load(open('Model.pkl', 'rb'))
 
 st.title('Will the person make a purchase or not')
 
@@ -23,9 +23,9 @@ def predict():
 
 
     if(int(label)==1):
-        st.success('Hureyyyy!! The costomer will make a purchase '  + ' :thumbsup:')
+        st.success('Hureyyyy!! The customer will make a purchase '  + ' :thumbsup:')
     else:
-        st.success('Ohhh The costomer wont make a purchase '  + ' :thumbsup:')
+        st.success('Ohhh The customer wont make a purchase '  + ' :thumbsup:')
 
 trigger = st.button('Predict', on_click=predict)
 
