@@ -90,12 +90,12 @@ Key Features include:
 
 ## 📂 Project Structure
 
-e-commerce-purchase-prediction/
-├── app.py # Streamlit app for predictions
-├── project.pkl # Trained Random Forest model
-├── ML_Notebook.ipynb # Full EDA + model building notebook
-├── requirements.txt # Python dependencies
-└── README.md # Project documentation
+- 📦 e-commerce-purchase-prediction
+- ┣ 📜 app.py # Streamlit app for predictions
+- ┣ 📜 project.pkl # Trained Random Forest model
+- ┣ 📜 ML_Notebook.ipynb # Full EDA + model building notebook
+- ┣ 📜 requirements.txt # Python dependencies
+- ┗ 📜 README.md # Project documentation
 
 
 ---
